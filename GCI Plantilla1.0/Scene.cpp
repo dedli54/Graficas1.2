@@ -155,8 +155,8 @@ bool Scene::Initialize() {
 	}
 
 	Object3d2 = new GameObject(OpenGL, handlerWindow, LoaderTexture, 
-		"recursos/WarGreymon/WarGreymon.obj",
-		"recursos/WarGreymon/WarGreymon.png");
+		"recursos/model/woodhouse/woodhouse.obj",
+		"recursos/model/woodhouse/woodhouse.png");
 	if (!Object3d2) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
@@ -381,7 +381,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 		}
 	}
-
 	if (WaterMovmentZ == true) {
 		WaterZ += 1;
 		if (WaterZ >= 100) {
@@ -396,19 +395,15 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		}
 	}
 
-
-	
-
-	
-	    //AAAAAAAAAAAAAAAAAAAAAAAAAAAA  DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z
-	
-
 	float* matrixGameObject1 = Object3d1->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, WaterX, 5.0f, WaterZ);
 	//OpenGL->MatrixScale(matrixGameObject1, 10000.0f, 10000.0f, 10000.0f);
 
+	
+	
+	
 	float* matrixGameObject2 = Object3d2->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject2, -100.0f, 6.0f, -10.0f);
 
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
