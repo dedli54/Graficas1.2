@@ -95,6 +95,7 @@ private:
 	GameObject* Drone;
 	GameObject* Water;
 	GameObject* WoodHouse;
+	GameObject* CasaCompleta;
 
 	//CollisionBox
 	BoundingBoxRenderer* box;

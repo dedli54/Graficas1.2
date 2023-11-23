@@ -123,7 +123,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	screenWidth = 0;
 	screenHeight = 0;
 
-	// Create the OpenGL object.
+	// Create the OpenGL object.FF
 	m_OpenGL = new OpenGLClass;
 	if (!m_OpenGL)
 	{
@@ -419,7 +419,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 	{
 		SetTimer(hwnd, Timer, Tick, NULL);
-		//ReproductorInicializaYReproduce();
+		ReproductorInicializaYReproduce();
 		return 0;
 	}
 	case WM_TIMER:

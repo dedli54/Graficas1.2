@@ -173,6 +173,25 @@ bool Scene::Initialize() {
 		WoodHouse->SetShaders(ShaderModel, ShaderBounding);
 	}
 
+	CasaCompleta = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/CasaCompleta/CasaCompleta.obj",
+		"recursos/model/CasaCompleta/CasaCompleta.jpg");
+	if (!CasaCompleta) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = CasaCompleta->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		CasaCompleta->SetShaders(ShaderModel, ShaderBounding);
+	}
+	
 	// Skydome
 	ShaderSky = new SkydomeShaderClass(OpenGL, handlerWindow, "shaders/SkydomeShader.vs", "shaders/SkydomeShader.ps");
 	if (!ShaderSky) {
@@ -317,9 +336,10 @@ bool Scene::Render() {
 	Triangulo->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos nuestros objetos en la escena
-	Drone->Render(viewMatrix, projectionMatrix, true);
+	Drone->Render(viewMatrix, projectionMatrix, false);
 	Water->Render(viewMatrix, projectionMatrix, false);
 	WoodHouse->Render(viewMatrix, projectionMatrix, true);
+	CasaCompleta->Render(viewMatrix, projectionMatrix, true);
 
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
@@ -395,15 +415,19 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		}
 	}
 
-	float* matrixGameObject1 = Water->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject1, WaterX, 5.0f, WaterZ);
-	//OpenGL->MatrixScale(matrixGameObject1, 10000.0f, 10000.0f, 10000.0f);
+	float* matrixWater = Water->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixWater, WaterX, 5.0f, WaterZ);
+	//OpenGL->MatrixScale(matrixWater, 10000.0f, 10000.0f, 10000.0f);
 
 	
 	
 	
-	float* matrixGameObject2 = WoodHouse->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject2, -100.0f, 10.0f, -10.0f);
+	float* matrixWoodHouse = WoodHouse->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixWoodHouse, -110.0f, 5.5f, -10.0f);
+
+	float* matrixCasaCompleta = CasaCompleta->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixCasaCompleta, 100.0f, 6.0f, -10.0f);
+
 
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
@@ -446,6 +470,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}
 
 	if (WoodHouse->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+
+	if (CasaCompleta->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
@@ -502,8 +532,8 @@ bool Scene::ManageCommands()
 	zDroneM = zd;
 
 
-	float* matrixGameObject = Drone->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject, xDroneM, yDroneM+0.08f, zDroneM);
+	float* matrixDrone = Drone->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixDrone, xDroneM, yDroneM+0.08f, zDroneM);
 
 
 	//Guardar la posición de la Cámara antes de actualizarla
