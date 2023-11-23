@@ -24,7 +24,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	speedAxisY = 0.0f;
 	speed = 0.0f;
 	angulo = 0.0f;
-	Object3d = 0;
+	Drone = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
 
@@ -115,62 +115,62 @@ bool Scene::Initialize() {
 		return result;
 	}
 
-	Object3d = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+	Drone = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/model/drone/drone.obj", 
 		"recursos/model/drone/drone.jpg");
-	if (!Object3d) {
+	if (!Drone) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d->Initialize();
+		result = Drone->Initialize();
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Object3d->SetShaders(ShaderModel, ShaderBounding);
+		Drone->SetShaders(ShaderModel, ShaderBounding);
 	}
 
-	Object3d1 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+	Water = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/model/water/water.obj",
 		"recursos/model/water/water.jpg");
-	if (!Object3d1) {
+	if (!Water) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d1->Initialize();
+		result = Water->Initialize();
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Object3d1->SetShaders(ShaderModel, ShaderBounding);
-		Object3d1->AddTexture("recursos/Official Models/Tree1T2.jpg");
+		Water->SetShaders(ShaderModel, ShaderBounding);
+		Water->AddTexture("recursos/Official Models/Tree1T2.jpg");
 	}
 
-	Object3d2 = new GameObject(OpenGL, handlerWindow, LoaderTexture, 
+	WoodHouse = new GameObject(OpenGL, handlerWindow, LoaderTexture, 
 		"recursos/model/woodhouse/woodhouse.obj",
 		"recursos/model/woodhouse/woodhouse.png");
-	if (!Object3d2) {
+	if (!WoodHouse) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d2->Initialize();
+		result = WoodHouse->Initialize();
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Object3d2->SetShaders(ShaderModel, ShaderBounding);
+		WoodHouse->SetShaders(ShaderModel, ShaderBounding);
 	}
 
 	// Skydome
@@ -317,9 +317,9 @@ bool Scene::Render() {
 	Triangulo->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos nuestros objetos en la escena
-	Object3d->Render(viewMatrix, projectionMatrix, true);
-	Object3d1->Render(viewMatrix, projectionMatrix, false);
-	Object3d2->Render(viewMatrix, projectionMatrix, true);
+	Drone->Render(viewMatrix, projectionMatrix, true);
+	Water->Render(viewMatrix, projectionMatrix, false);
+	WoodHouse->Render(viewMatrix, projectionMatrix, true);
 
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
@@ -395,15 +395,15 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		}
 	}
 
-	float* matrixGameObject1 = Object3d1->GetWorldMatrix();
+	float* matrixGameObject1 = Water->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, WaterX, 5.0f, WaterZ);
 	//OpenGL->MatrixScale(matrixGameObject1, 10000.0f, 10000.0f, 10000.0f);
 
 	
 	
 	
-	float* matrixGameObject2 = Object3d2->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject2, -100.0f, 6.0f, -10.0f);
+	float* matrixGameObject2 = WoodHouse->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject2, -100.0f, 10.0f, -10.0f);
 
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
@@ -434,18 +434,18 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixMultiply(matrixBox4, matrixBox4, auxMatrix);
 
 	//Colisión por esfera
-	/*if (Object3d->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
+	/*if (Drone->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
 	//Colisión por caja
-	if (Object3d->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	if (Drone->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 
-	if (Object3d2->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	if (WoodHouse->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
@@ -502,7 +502,7 @@ bool Scene::ManageCommands()
 	zDroneM = zd;
 
 
-	float* matrixGameObject = Object3d->GetWorldMatrix();
+	float* matrixGameObject = Drone->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject, xDroneM, yDroneM+0.08f, zDroneM);
 
 
@@ -661,34 +661,34 @@ bool Scene::ManageCommands()
 			DeltaRotation->Y += speedAxisY * deltaTime;
 		}
 		if (input->GetKey(KeyCode.One)) {
-			Object3d1->ChangeTexture(0, 0);
+			Water->ChangeTexture(0, 0);
 		}
 		if (input->GetKey(KeyCode.Two)) {
-			Object3d1->ChangeTexture(1, 1);
+			Water->ChangeTexture(1, 1);
 		}
 		if (input->GetKey(KeyCode.Three)) {
-			Object3d1->ChangeTexture(2, 2);
+			Water->ChangeTexture(2, 2);
 		}
 		if (input->GetKey(KeyCode.Four)) {
-			Object3d1->ChangeTexture(3, 3);
+			Water->ChangeTexture(3, 3);
 		}
 		if (input->GetKey(KeyCode.Five)) {
-			Object3d1->ChangeTexture(4, 4);
+			Water->ChangeTexture(4, 4);
 		}
 		if (input->GetKey(KeyCode.Six)) {
-			Object3d1->ChangeTexture(5, 5);
+			Water->ChangeTexture(5, 5);
 		}
 		if (input->GetKey(KeyCode.Seven)) {
-			Object3d1->ChangeTexture(6, 6);
+			Water->ChangeTexture(6, 6);
 		}
 		if (input->GetKey(KeyCode.Eight)) {
-			Object3d1->ChangeTexture(7, 7);
+			Water->ChangeTexture(7, 7);
 		}
 		if (input->GetKey(KeyCode.Nine)) {
-			Object3d1->ChangeTexture(8, 8);
+			Water->ChangeTexture(8, 8);
 		}
 		if (input->GetKey(KeyCode.Zero)) {
-			Object3d1->ChangeTexture(9, 9);
+			Water->ChangeTexture(9, 9);
 		}
 
 
@@ -729,10 +729,10 @@ bool Scene::Shutdown()
 		Triangulo = 0;
 	}
 
-	if (Object3d) {
-		Object3d->Shutdown();
-		delete Object3d;
-		Object3d = 0;
+	if (Drone) {
+		Drone->Shutdown();
+		delete Drone;
+		Drone = 0;
 	}
 
 	return result;

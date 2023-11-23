@@ -92,9 +92,9 @@ private:
 	TextureClass* LoaderTexture;
 
 	//Objetos
-	GameObject* Object3d;
-	GameObject* Object3d1;
-	GameObject* Object3d2;
+	GameObject* Drone;
+	GameObject* Water;
+	GameObject* WoodHouse;
 
 	//CollisionBox
 	BoundingBoxRenderer* box;
