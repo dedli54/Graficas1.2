@@ -531,7 +531,7 @@ bool Scene::ManageCommands()
 		vr[0] -= sinf(radians) * speed * deltaTime;
 		vr[1] -= cosf(radians) * speed * deltaTime;
 		}
-	
+	//test
 	}
 	if ((input->GetKey(KeyCode.A) || input->GetKey(KeyCode.Left))) {
 		
