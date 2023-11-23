@@ -6,8 +6,10 @@ float altu = 7;
 bool start = true;
 float xd = 0, yd = 0, zd = 0;
 float xDroneM = 0, yDroneM = 0, zDroneM = 0;
-
-
+bool WaterMovmentX = true;
+bool WaterMovmentZ = true;
+float WaterX = 255;
+float WaterZ = 103;
 
 Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	handlerWindow = hwnd;
@@ -83,6 +85,9 @@ bool Scene::Initialize() {
 		Terreno->SetLandShader(LightShader);
 	}
 
+	
+
+
 	Triangulo = new TriangleClass(OpenGL);
 	if (!Triangulo) {
 		result = false;
@@ -130,8 +135,8 @@ bool Scene::Initialize() {
 	}
 
 	Object3d1 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/Official Models/Tree1.obj",
-		"recursos/Official Models/Tree1T1.jpg");
+		"recursos/model/water/water.obj",
+		"recursos/model/water/water.jpg");
 	if (!Object3d1) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
@@ -284,6 +289,8 @@ bool Scene::Render() {
 	float viewMatrix[16];
 	float projectionMatrix[16];
 
+
+
 	// Actualiza la posicion y rotacion de la camara
 	Camera->SetPosition(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z);
 	Camera->SetRotation(DeltaRotation->X, DeltaRotation->Y, DeltaRotation->Z);
@@ -302,6 +309,9 @@ bool Scene::Render() {
 
 	// Renderizamos terreno
 	Terreno->Render(OpenGL, worldMatrix, viewMatrix, projectionMatrix);
+
+	
+
 
 	// Renderizamos Triangulo (ya se logra ver en escena)
 	Triangulo->Render(viewMatrix, projectionMatrix);
@@ -356,15 +366,46 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		return result;
 	}
 
-	float* matrixTriangle = Triangulo->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixTriangle, -10.0f, 8.0f, 0.0f);
+	//agua 
+
+	if (WaterMovmentX == true) {
+		WaterX += 1;
+		if (WaterX >= 100) {
+			WaterMovmentX = false;
+		}
+	}
+	if (WaterMovmentX == false) {
+		WaterX = -1;
+		if (WaterX <= -100) {
+			WaterMovmentX = true;
+
+		}
+	}
+
+	if (WaterMovmentZ == true) {
+		WaterZ += 1;
+		if (WaterZ >= 100) {
+			WaterMovmentZ = false;
+		}
+	}
+	if (WaterMovmentZ == false) {
+		WaterZ -= 1;
+		if (WaterZ <= -100) {
+			WaterMovmentZ = true;
+
+		}
+	}
+
+
+	
 
 	
 	    //AAAAAAAAAAAAAAAAAAAAAAAAAAAA  DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z
 	
 
 	float* matrixGameObject1 = Object3d1->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject1, WaterX, 5.0f, WaterZ);
+	//OpenGL->MatrixScale(matrixGameObject1, 10000.0f, 10000.0f, 10000.0f);
 
 	float* matrixGameObject2 = Object3d2->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 6.0f, -10.0f);
