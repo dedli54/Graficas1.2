@@ -75,8 +75,8 @@ bool Scene::Initialize() {
 	}
 
 	//Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/heightmap.jpg", "recursos/test.tga", "recursos/Piedras_normal.jpg",(float)400, (float)400, 0, 1);
-	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"textures/heightmap.jpg", "textures/terrain1.jpg", "textures/terrain2.jpg", "textures/heightmap.jpg", (float)400, (float)400);
-	if (!Terreno){
+	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"textures/heightmap.jpg", "recursos/Piedras.jpg", "textures/terrain1.jpg", "textures/heightmap.jpg", (float)400, (float)400);
+	if (!Terreno) {
 		result = false;
 		_RPT1(0, "Alert! Land has not been initialized. \n", 0);
 		return result;
@@ -85,7 +85,7 @@ bool Scene::Initialize() {
 		Terreno->SetLandShader(LightShader);
 	}
 
-	
+
 
 
 	Triangulo = new TriangleClass(OpenGL);
@@ -116,7 +116,7 @@ bool Scene::Initialize() {
 	}
 
 	Drone = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/model/drone/drone.obj", 
+		"recursos/model/drone/drone.obj",
 		"recursos/model/drone/drone.jpg");
 	if (!Drone) {
 		result = false;
@@ -154,7 +154,7 @@ bool Scene::Initialize() {
 		Water->AddTexture("recursos/Official Models/Tree1T2.jpg");
 	}
 
-	WoodHouse = new GameObject(OpenGL, handlerWindow, LoaderTexture, 
+	WoodHouse = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/model/woodhouse/woodhouse.obj",
 		"recursos/model/woodhouse/woodhouse.png");
 	if (!WoodHouse) {
@@ -291,7 +291,7 @@ bool Scene::Initialize() {
 		lamp->SetShaders(ShaderModel, ShaderBounding);
 
 	}
-	
+
 
 	// Skydome
 	ShaderSky = new SkydomeShaderClass(OpenGL, handlerWindow, "shaders/SkydomeShader.vs", "shaders/SkydomeShader.ps");
@@ -302,7 +302,7 @@ bool Scene::Initialize() {
 		return result;
 	}
 
-	Skydome = new Dome("recursos/sky.jpg", OpenGL, LoaderTexture, 500);
+	Skydome = new Dome("recursos/sky.png", OpenGL, LoaderTexture, 500);
 	if (!Skydome) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the Skydome.", "Error", MB_OK);
@@ -376,16 +376,64 @@ bool Scene::Initialize() {
 		return result;
 	}
 
-	arbol2D = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/tree.png");
-	if (!arbol2D) {
+	forest = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/forest.png");
+	if (!forest) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		arbol2D->Initialize(5.0f);
-		arbol2D->SetShader(ShaderBill);
+		forest->Initialize(15.0f);
+		forest->SetShader(ShaderBill);
+	}
+
+	glow = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/red.png");
+	if (!glow) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		glow->Initialize(2.0f);
+		glow->SetShader(ShaderBill);
+	}
+
+	magic = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/magic.png");
+	if (!magic) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		magic->Initialize(2.0f);
+		magic->SetShader(ShaderBill);
+	}
+
+	fire = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/fire.png");
+	if (!fire) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		fire->Initialize(7.0f);
+		fire->SetShader(ShaderBill);
+	}
+
+	smoke = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/smoke.png");
+	if (!smoke) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		smoke->Initialize(10.0f);
+		smoke->SetShader(ShaderBill);
 	}
 
 	if (start)
@@ -424,7 +472,7 @@ bool Scene::Render() {
 	OpenGL->GetProjectionMatrix(projectionMatrix);
 
 	// Renderizamos el Skydome
-	//Skydome->CicloInterpolaciones();
+	Skydome->CicloInterpolaciones();
 	Skydome->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos terreno
@@ -439,13 +487,13 @@ bool Scene::Render() {
 	// Renderizamos nuestros objetos en la escena
 	Drone->Render(viewMatrix, projectionMatrix, false);
 	Water->Render(viewMatrix, projectionMatrix, false);
-	WoodHouse->Render(viewMatrix, projectionMatrix, true);
-	CasaCompleta->Render(viewMatrix, projectionMatrix, true);
-	RunasRoja->Render(viewMatrix, projectionMatrix, true);
-	table->Render(viewMatrix, projectionMatrix, true);
-	LibroMagico->Render(viewMatrix, projectionMatrix, true);
-	portal->Render(viewMatrix, projectionMatrix, true);
-	lamp->Render(viewMatrix, projectionMatrix, true);
+	WoodHouse->Render(viewMatrix, projectionMatrix, false);
+	CasaCompleta->Render(viewMatrix, projectionMatrix, false);
+	RunasRoja->Render(viewMatrix, projectionMatrix, false);
+	table->Render(viewMatrix, projectionMatrix, false);
+	LibroMagico->Render(viewMatrix, projectionMatrix, false);
+	portal->Render(viewMatrix, projectionMatrix, false);
+	lamp->Render(viewMatrix, projectionMatrix, false);
 
 
 
@@ -456,24 +504,32 @@ bool Scene::Render() {
 	box4->Draw(viewMatrix, projectionMatrix);*/
 
 	// Renderizamos los billboards
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		0.0f, Terreno->Superficie(0.0f, 0.0f), 0.0f, 
+	forest->Render(viewMatrix, projectionMatrix,
+		0.0f, Terreno->Superficie(0.0f, 0.0f), 100.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		-10.0f, Terreno->Superficie(-10.0f, -10.0f), -10.0f, 
+	glow->Render(viewMatrix, projectionMatrix, 
+		100.0f, Terreno->Superficie(-10.0f, -10.0f),-11.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		10.0f, Terreno->Superficie(10.0f, 10.0f), 10.0f, 
+	magic->Render(viewMatrix, projectionMatrix, 
+		-70.0f, Terreno->Superficie(10.0f, 10.0f), 0.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		-10.0f, Terreno->Superficie(-10.0f, 10.0f), 10.0f, 
+	fire->Render(viewMatrix, projectionMatrix,
+		-67.0f, Terreno->Superficie(-10.0f, 10.0f), -29.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f, 
+	fire->Render(viewMatrix, projectionMatrix,
+		-69.0f, Terreno->Superficie(-10.0f, 10.0f), -29.0f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	fire->Render(viewMatrix, projectionMatrix,
+		-68.0f, Terreno->Superficie(-10.0f, 10.0f), -31.0f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	smoke->Render(viewMatrix, projectionMatrix, 
+		-68.0f, 6.0f, -29.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
 	// Damos la instruccion de que termino la escena para que nos muestre frame a frame.
@@ -540,16 +596,16 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixRunasRoja, 100.0f, 6.0f, -10.0f);
 
 	float* matrixtable = table->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixtable, 100.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixtable, -70.0f, 6.0f, 0.0f);
 
 	float* matrixLibroMagico = LibroMagico->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixLibroMagico, 100.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixLibroMagico, -70.0f, 8.58f, 00.0f);
 
 	float* matrixportal = portal->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixportal, 100.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixportal, 100.0f, 0.0f, -120.0f);
 
 	float* matrixlamp = lamp->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixlamp, 100.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixlamp, 5.0f, 5.9f, -42.0f);
 
 	
 	//Tranformaciones de cajas de colisión

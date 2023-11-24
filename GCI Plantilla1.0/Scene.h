@@ -111,7 +111,11 @@ private:
 	BoundingBoxRenderer* box3;
 	BoundingBoxRenderer* box4;
 	//Billboards
-	Billboard* arbol2D;
+	Billboard* forest;
+	Billboard* magic;
+	Billboard* smoke;
+	Billboard* fire;
+	Billboard* glow;
 
 	//Variables de Movimiento (Traslacion)
 	float speedAxisX;
