@@ -94,8 +94,16 @@ private:
 	//Objetos
 	GameObject* Drone;
 	GameObject* Water;
+	
 	GameObject* WoodHouse;
 	GameObject* CasaCompleta;
+	
+	GameObject* RunasRoja;
+	GameObject* table;
+	GameObject* LibroMagico;
+	GameObject* portal;
+	GameObject* lamp;
+
 
 	//CollisionBox
 	BoundingBoxRenderer* box;

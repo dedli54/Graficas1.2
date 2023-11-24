@@ -191,7 +191,108 @@ bool Scene::Initialize() {
 		}
 		CasaCompleta->SetShaders(ShaderModel, ShaderBounding);
 	}
+
+	RunasRoja = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/RunasRoja/RunasRoja.obj",
+		"recursos/model/RunasRoja/RunasRoja.png");
+	if (!RunasRoja) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = RunasRoja->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		RunasRoja->SetShaders(ShaderModel, ShaderBounding);
+
+	}
+
+	table = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/table/table.obj",
+		"recursos/model/table/table.jpg");
+	if (!table) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = table->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		table->SetShaders(ShaderModel, ShaderBounding);
+
+	}
+
+	LibroMagico = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/LibroMagico/LibroMagico.obj",
+		"recursos/model/LibroMagico/LibroMagico.png");
+	if (!LibroMagico) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = LibroMagico->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		LibroMagico->SetShaders(ShaderModel, ShaderBounding);
+
+	}
+
+	portal = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/portal/portal.obj",
+		"recursos/model/portal/portal.png");
+	if (!portal) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = portal->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		portal->SetShaders(ShaderModel, ShaderBounding);
+
+	}
+
+	lamp = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/model/lamp/lamp.obj",
+		"recursos/model/lamp/lamp.png");
+	if (!lamp) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = lamp->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		lamp->SetShaders(ShaderModel, ShaderBounding);
+
+	}
 	
+
 	// Skydome
 	ShaderSky = new SkydomeShaderClass(OpenGL, handlerWindow, "shaders/SkydomeShader.vs", "shaders/SkydomeShader.ps");
 	if (!ShaderSky) {
@@ -340,6 +441,13 @@ bool Scene::Render() {
 	Water->Render(viewMatrix, projectionMatrix, false);
 	WoodHouse->Render(viewMatrix, projectionMatrix, true);
 	CasaCompleta->Render(viewMatrix, projectionMatrix, true);
+	RunasRoja->Render(viewMatrix, projectionMatrix, true);
+	table->Render(viewMatrix, projectionMatrix, true);
+	LibroMagico->Render(viewMatrix, projectionMatrix, true);
+	portal->Render(viewMatrix, projectionMatrix, true);
+	lamp->Render(viewMatrix, projectionMatrix, true);
+
+
 
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
@@ -428,7 +536,22 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixCasaCompleta = CasaCompleta->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixCasaCompleta, 100.0f, 6.0f, -10.0f);
 
+	float* matrixRunasRoja = RunasRoja->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixRunasRoja, 100.0f, 6.0f, -10.0f);
 
+	float* matrixtable = table->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixtable, 100.0f, 6.0f, -10.0f);
+
+	float* matrixLibroMagico = LibroMagico->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixLibroMagico, 100.0f, 6.0f, -10.0f);
+
+	float* matrixportal = portal->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixportal, 100.0f, 6.0f, -10.0f);
+
+	float* matrixlamp = lamp->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixlamp, 100.0f, 6.0f, -10.0f);
+
+	
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
@@ -476,9 +599,57 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}
 
 	if (CasaCompleta->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		altu = 30;
+	}
+
+	if (RunasRoja->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		
+	}
+
+	if (table->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+
+	}
+
+	if (LibroMagico->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+
+	}
+
+	if (portal->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+
+	}
+
+	if (lamp->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		MessageBoxA(NULL, "Warning collision imminent, taking control",
+			"Collision detection system", MB_OK);
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+
 	}
 
 	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
